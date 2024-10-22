@@ -30,6 +30,12 @@
     <ClCompile Include="camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="framebuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opengltimer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -47,12 +53,27 @@
     <ClInclude Include="camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="framebuffer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opengltimer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="boundingbox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fragmentSource.glsl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="vertexSource.glsl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="fragmentSource2.glsl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="vertexSource2.glsl">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>

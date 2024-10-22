@@ -6,6 +6,7 @@ class Camera {
 	vec3 wEyePrev, wLookatPrev, wVupPrev;
 	float fov, asp, fp, bp;
 public:
+	Camera(){}
 	Camera(int width, int height) : wEye(0.0, 0.0, 2.0), wLookat(0.0, 0.0, 0.0),
 		wVup(0.0, 1.0, 0.0)
 	{
