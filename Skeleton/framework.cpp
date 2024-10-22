@@ -26,6 +26,9 @@ void onMouse(int button, int state, int pX, int pY);
 // Idle event indicating that some time elapsed: do animation here
 void onIdle();
 
+
+void onReshape(int width, int height);
+
 // Entry point of the application
 int main(int argc, char * argv[]) {
 	// Initialize GLUT, Glew and OpenGL 
@@ -66,6 +69,7 @@ int main(int argc, char * argv[]) {
 	glutKeyboardFunc(onKeyboard);
 	glutKeyboardUpFunc(onKeyboardUp);
 	glutMotionFunc(onMouseMotion);
+	glutReshapeFunc(onReshape);
 
 	glutMainLoop();
 	return 1;
