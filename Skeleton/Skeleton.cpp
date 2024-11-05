@@ -1,9 +1,10 @@
 #include "framework.h"
+#include "opengltimer.hpp"
 
 
 
 
-
+OpenGLTimer* timer = 0;
 Scene* sceen;
 int currentWindowWidth = windowWidth;
 int currentWindowHeight = windowHeight;
@@ -11,6 +12,7 @@ int currentWindowHeight = windowHeight;
 void onInitialization() {
 	glViewport(0, 0, windowWidth, windowHeight);
 	sceen = new Scene(windowWidth, windowHeight);
+	timer = new OpenGLTimer();
 
 }
 
@@ -21,8 +23,22 @@ void onDisplay() {
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_FRONT);
+	if (timer) {
+		timer->start(); 
+	}
+
 	sceen->Render();
+	float t = 1.0;
+	if (timer) t = timer->stop();
 	glutSwapBuffers();
+
+
+	float fps = 1000.0 / t;
+	if (fps < 30.0) sceen->IncreaseStepSize();
+	if (fps > 60.0) sceen->DecreaseStepSize();
+	char title[128];
+	sprintf(title, "Volume Rendering (fps: %.2f, step size: %.4f)", fps, sceen->GetStepSize());
+	glutSetWindowTitle(title);
 }
 
 // Key of ASCII code pressed

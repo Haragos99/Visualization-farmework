@@ -62,6 +62,9 @@
     <ClInclude Include="boundingbox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="texture3d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fragmentSource.glsl">

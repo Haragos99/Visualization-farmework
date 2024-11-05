@@ -5,11 +5,15 @@ uniform sampler2D samplerUnitBackBuffer;
 uniform float stepSize;
 
 float pi = 3.14159265;
+uniform sampler3D samplerUnitVolume;
+uniform vec3 volumeSize;
 
 
 
-
-
+float densityResample(vec3 position)
+{
+	return texture(samplerUnitVolume, position).r;
+}
 
 
 
@@ -40,6 +44,22 @@ vec3 MarschnerLobbGradient(vec3 position)
 
 
 
+vec3 gradientResample(vec3 position)
+{
+	vec3 step = 1.0 / volumeSize;
+	vec3 dx = vec3(step.x, 0.0, 0.0);
+	vec3 dy = vec3(0.0, step.y, 0.0);
+	vec3 dz = vec3(0.0, 0.0, step.z);
+	float gx = densityResample(position + dx) - densityResample(position - dx);
+	float gy = densityResample(position + dy) - densityResample(position - dy);
+	float gz = densityResample(position + dz) - densityResample(position - dz);
+
+	return normalize(vec3(gx, gy, gz));
+}
+
+
+
+
 in vec3 entryPoint;
 in vec4 pixelPosition;
 out vec4 outColor;
@@ -60,10 +80,10 @@ void main() {
 			numberOfSamples++; // minták számlálása
 			if (numberOfSamples > maxNumberOfSamples) break;
 
-			float density = MarschnerLobb(position);
+			float density = densityResample(position);
 			if (abs(density - threshold) < 0.01)
 			{
-				vec3 normal = MarschnerLobbGradient(position); // tesztjel gradiensének kiértékelése
+				vec3 normal = gradientResample(position); // gradiens kiértékelése
 				vec3 kd = vec3(0.6, 0.6, 0.9); // diffúz együttható
 				vec3 ks = vec3(1.0, 1.0, 1.0); // spekuláris együttható
 				color.xyz =

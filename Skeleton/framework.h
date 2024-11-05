@@ -28,6 +28,7 @@
 #include "camera.h"
 #include "framebuffer.hpp"
 #include "boundingbox.h"
+#include "texture3d.h"
 // Resolution of screen
 const unsigned int windowWidth = 600, windowHeight = 600;
 
@@ -39,7 +40,9 @@ class Scene
 	Framebuffer* backbuffer;
 	GPUProgram gpuProgram1;
 	GPUProgram gpuProgram0;
+	Texture3D* volume;
 	float stepSize;
+	float minStepSize;
 public:
 	Camera camera;
 	Scene(){}
@@ -51,12 +54,16 @@ public:
 		gpuProgram0.create("vertexSource.glsl", "fragmentSource.glsl", "outColor");
 		camera = Camera(width, height);
 		gpuProgram1.create("vertexSource2.glsl", "fragmentSource2.glsl", "outColor");
-		stepSize = 0.002;
+		minStepSize = 0.0001;
+		stepSize = minStepSize;
+		int sx, sy, sz; sx = sy = sz = 80;
+		volume = new Texture3D(sx, sy, sz);
 	}
 	~Scene() // destruktor: memóriapuffer és befoglaló doboz lebontása
 	{
 		delete boundingBox;
 		delete backbuffer;
+		delete volume;
 	}
 	void ResizeFrameBuffer(int width, int height) // újra kell allokálni a memóriapuffert
 	{
@@ -64,6 +71,17 @@ public:
 		bufferWidth = width; bufferHeight = height;
 		backbuffer = new Framebuffer(bufferWidth, bufferHeight, 1, false, true);
 	}
+
+	void DecreaseStepSize() // nagyobb FPS-nél csökkentjük a mintavételi távolságot
+	{
+		stepSize = max(minStepSize, stepSize / 1.2);
+	}
+	float GetStepSize() {return stepSize;}
+	void IncreaseStepSize() // kisebb FPS-nél növeljük a mintavételi távolságot
+	{
+		stepSize *= 1.2;
+	}
+
 	void Render() // színtér renderelése
 	{
 		glDisable(GL_DEPTH_TEST); // z-bufferelés kikapcsolása
@@ -88,6 +106,7 @@ public:
 		glActiveTexture(GL_TEXTURE0 + samplerUnit);
 		glBindTexture(GL_TEXTURE_2D, backbuffer->getColorBuffer(0));
 		gpuProgram1.setUniform(MVP, "MVP"); // MVP mátrix feltöltése gpuProgram1-hez
+		volume->Bind(gpuProgram1);
 		boundingBox->Render(); // befoglaló doboz elõlapjainak renderelése
 	}
 
