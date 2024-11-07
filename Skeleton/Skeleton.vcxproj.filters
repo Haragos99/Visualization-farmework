@@ -15,10 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Skeleton.cpp">
+    <ClCompile Include="framework.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="framework.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GPUProgram.cpp">
@@ -34,6 +34,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="opengltimer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="texture3d.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="boundingbox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -65,18 +74,21 @@
     <ClInclude Include="texture3d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="fragmentSource.glsl">
+    <None Include="shaders\fragmentSource.glsl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="vertexSource.glsl">
+    <None Include="shaders\fragmentSource2.glsl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="fragmentSource2.glsl">
+    <None Include="shaders\vertexSource.glsl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="vertexSource2.glsl">
+    <None Include="shaders\vertexSource2.glsl">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>

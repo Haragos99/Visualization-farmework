@@ -64,6 +64,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\Libs\glew-1.13.0\include\;$(SolutionDir)..\..\Libs\freeglut\include\;$(SolutionDir)..\..\Libs\devil-1.7.8\include\</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -74,13 +75,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="boundingbox.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="framebuffer.cpp" />
-    <ClCompile Include="framework.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="GPUProgram.cpp" />
     <ClCompile Include="opengltimer.cpp" />
-    <ClCompile Include="Skeleton.cpp" />
+    <ClCompile Include="framework.cpp" />
+    <ClCompile Include="scene.cpp" />
     <ClCompile Include="texture.cpp" />
+    <ClCompile Include="texture3d.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="algebra.h" />
@@ -90,14 +94,15 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="GPUProgram.h" />
     <ClInclude Include="opengltimer.hpp" />
+    <ClInclude Include="scene.h" />
     <ClInclude Include="texture.h" />
     <ClInclude Include="texture3d.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="fragmentSource.glsl" />
-    <None Include="fragmentSource2.glsl" />
-    <None Include="vertexSource.glsl" />
-    <None Include="vertexSource2.glsl" />
+    <None Include="shaders\fragmentSource.glsl" />
+    <None Include="shaders\fragmentSource2.glsl" />
+    <None Include="shaders\vertexSource.glsl" />
+    <None Include="shaders\vertexSource2.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

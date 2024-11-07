@@ -48,7 +48,8 @@ bool GPUProgram::create(std::string vertexShaderSource,
 	std::string fragmentShaderSource, const char* const fragmentShaderOutputName,
 	const char* const geometryShaderSource)
 {
-	std::string path = "C:\\Users\\Felhasználó\\OneDrive\\Documents\\GraphicsHomeworkPackage\\Programs\\Skeleton\\Skeleton\\";
+
+	std::string path = "C:\\Users\\Felhasználó\\OneDrive\\Documents\\GraphicsHomeworkPackage\\Programs\\Skeleton\\Skeleton\\shaders\\";
 	
 
 	std::string vs = readShaderFromFile(path + vertexShaderSource);

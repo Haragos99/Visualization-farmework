@@ -1,76 +1,113 @@
-//=============================================================================================
-// Collection of classes from lecture slides.
-// Framework for assignments. Valid from 2019.
-// Do not change it if you want to submit a homework.
-//=============================================================================================
 #include "framework.h"
 
-// Initialization
-void onInitialization();
+
+OpenGLTimer* timer = 0;
+Scene* scene;
+int currentWindowWidth = windowWidth;
+int currentWindowHeight = windowHeight;
+
+// Initialization, create an OpenGL context
+void onInitialization() {
+	glViewport(0, 0, windowWidth, windowHeight);
+	scene = new Scene(windowWidth, windowHeight);
+	timer = new OpenGLTimer();
+
+}
 
 // Window has become invalid: Redraw
-void onDisplay();
+void onDisplay() {
+	glClearColor(1, 1, 1, 1);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glDisable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_FRONT);
+	if (timer) {
+		timer->start(); 
+	}
+
+	scene->Render();
+	float t = 1.0;
+	if (timer) t = timer->stop();
+	glutSwapBuffers();
+
+
+	float fps = 1000.0 / t;
+	if (fps < 30.0) scene->IncreaseStepSize();
+	if (fps > 60.0) scene->DecreaseStepSize();
+	char title[128];
+	sprintf(title, "Volume Rendering (fps: %.2f, step size: %.4f)", fps, scene->getStepSize());
+	glutSetWindowTitle(title);
+}
 
 // Key of ASCII code pressed
-void onKeyboard(unsigned char key, int pX, int pY);
+void onKeyboard(unsigned char key, int pX, int pY) {
+	if (key == 'd') glutPostRedisplay();         // if d, invalidate display, i.e. redraw
+}
 
 // Key of ASCII code released
-void onKeyboardUp(unsigned char key, int pX, int pY);
+void onKeyboardUp(unsigned char key, int pX, int pY) {
+}
 
 // Move mouse with key pressed
-void onMouseMotion(int pX, int pY);
+vec2 mousePrevPosition;
+bool isFirstMove = true;
+
+// Move mouse with key pressed
+void onMouseMotion(int pX, int pY) {	// pX, pY are the pixel coordinates of the cursor in the coordinate system of the operation system
+	// Convert to normalized device space
+	float cX = 2.0f * pX / windowWidth - 1;	// flip y axis
+	float cY = 1.0f - 2.0f * pY / windowHeight;
+	printf("Mouse moved to (%3.2f, %3.2f)\n", cX, cY);
+
+	vec2 mousePosition = vec2{ cX, cY };
+	if (isFirstMove) {
+		isFirstMove = false;
+		mousePrevPosition = mousePosition;
+	}
+	scene->camera.rotateAroundLookAt(vec3{ mousePosition.y - mousePrevPosition.y, -mousePosition.x + mousePrevPosition.x, 0.0f });
+	mousePrevPosition = mousePosition;
+	glutPostRedisplay();
+	
+}
 
 // Mouse click event
-void onMouse(int button, int state, int pX, int pY);
+void onMouse(int button, int state, int pX, int pY) { // pX, pY are the pixel coordinates of the cursor in the coordinate system of the operation system
+	// Convert to normalized device space
+	float cX = 2.0f * pX / windowWidth - 1;	// flip y axis
+	float cY = 1.0f - 2.0f * pY / windowHeight;
+
+	char * buttonStat;
+	switch (state) {
+	case GLUT_DOWN: buttonStat = "pressed"; break;
+	case GLUT_UP:   buttonStat = "released"; isFirstMove = true;break;
+	}
+
+	switch (button) {
+	case GLUT_LEFT_BUTTON:   printf("Left button %s at (%3.2f, %3.2f)\n", buttonStat, cX, cY);   break;
+	case GLUT_MIDDLE_BUTTON: printf("Middle button %s at (%3.2f, %3.2f)\n", buttonStat, cX, cY); break;
+	case GLUT_RIGHT_BUTTON:  printf("Right button %s at (%3.2f, %3.2f)\n", buttonStat, cX, cY);  break;
+	}
+}
 
 // Idle event indicating that some time elapsed: do animation here
-void onIdle();
+void onIdle() {
+	long time = glutGet(GLUT_ELAPSED_TIME); // elapsed time since the start of the program
+}
 
 
-void onReshape(int width, int height);
+void onReshape(int width, int height)
+{
+	currentWindowWidth = width;
+	currentWindowHeight = height;
+	glViewport(0, 0, width, height);
+	
+	scene->camera.SetAspectRatio((float)width / height);
+	scene->ResizeFrameBuffer(width, height);
+	glutPostRedisplay();
+}
 
-// Entry point of the application
-int main(int argc, char * argv[]) {
-	// Initialize GLUT, Glew and OpenGL 
-	glutInit(&argc, argv);
-
-	// OpenGL major and minor versions
-	int majorVersion = 3, minorVersion = 3;
-#if !defined(__APPLE__)
-	glutInitContextVersion(majorVersion, minorVersion);
-#endif
-	glutInitWindowSize(windowWidth, windowHeight);				// Application window is initially of resolution 600x600
-	glutInitWindowPosition(100, 100);							// Relative location of the application window
-#if defined(__APPLE__)
-	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_3_2_CORE_PROFILE);  // 8 bit R,G,B,A + double buffer + depth buffer
-#else
-	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
-#endif
-	glutCreateWindow(argv[0]);
-
-#if !defined(__APPLE__)
-	glewExperimental = true;	// magic
-	glewInit();
-#endif
-	printf("GL Vendor    : %s\n", glGetString(GL_VENDOR));
-	printf("GL Renderer  : %s\n", glGetString(GL_RENDERER));
-	printf("GL Version (string)  : %s\n", glGetString(GL_VERSION));
-	glGetIntegerv(GL_MAJOR_VERSION, &majorVersion);
-	glGetIntegerv(GL_MINOR_VERSION, &minorVersion);
-	printf("GL Version (integer) : %d.%d\n", majorVersion, minorVersion);
-	printf("GLSL Version : %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
-
-	// Initialize this program and create shaders
-	onInitialization();
-
-	glutDisplayFunc(onDisplay);                // Register event handlers
-	glutMouseFunc(onMouse);
-	glutIdleFunc(onIdle);
-	glutKeyboardFunc(onKeyboard);
-	glutKeyboardUpFunc(onKeyboardUp);
-	glutMotionFunc(onMouseMotion);
-	glutReshapeFunc(onReshape);
-
-	glutMainLoop();
-	return 1;
+void onExit()
+{
+	delete scene;
+	delete timer;
 }

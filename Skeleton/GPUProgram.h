@@ -6,6 +6,7 @@
 #include "texture.h"
 #include <fstream>
 #include <iostream>
+#include <cstdlib>    // For std::getenv
 #include <filesystem>
 
 class GPUProgram {
