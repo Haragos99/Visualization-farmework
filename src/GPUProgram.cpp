@@ -50,11 +50,11 @@ bool GPUProgram::create(std::string vertexShaderSource,
 {
 
 	std::filesystem::path curent = std::filesystem::current_path();
-	std::string path = curent.string() + "\\shaders\\";
+	std::string path = SHADER_DIR;
 	
 
-	std::string vs = readShaderFromFile(path + vertexShaderSource);
-	std::string fs = readShaderFromFile(path + fragmentShaderSource);
+	std::string vs = readShaderFromFile(path + "\\" + vertexShaderSource);
+	std::string fs = readShaderFromFile(path + "\\" + fragmentShaderSource);
 
 	const char* const vertexShader_ = vs.c_str();
 	const char* const fragmentShader_ = fs.c_str();
